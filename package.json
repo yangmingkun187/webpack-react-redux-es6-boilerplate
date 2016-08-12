@@ -1,0 +1,29 @@
+{
+  "name": "webpack-react-redux-es6-boilerplate",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/yangmingkun187/webpack-react-redux-es6-boilerplate.git"
+  },
+  "keywords": [
+    "react",
+    "redux",
+    "es6",
+    "webpack"
+  ],
+  "author": "Jason Yang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yangmingkun187/webpack-react-redux-es6-boilerplate/issues"
+  },
+  "homepage": "https://github.com/yangmingkun187/webpack-react-redux-es6-boilerplate#readme"
+}
