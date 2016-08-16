@@ -77,20 +77,84 @@ config.module.loaders.push({
     loaders: ['babel?cacheDirectory=' + CACHE_PATH]
 });
 
+config.entry.lib = [
+    'react', 'react-dom', 'react-router',
+    'redux', 'react-redux', 'redux-thunk'
+]
+
+config.output.filename = 'js/[name].js';
+
+config.plugins.push(
+    new webpack.optimize.CommonsChunkPlugin('lib', 'js/lib.js')
+);
+
 // 编译 sass
 config.module.loaders.push({
     test: /\.(scss|css)$/,
     loaders: ['style', 'css', 'sass']
 });
 
+// css autoprefix
+var precss = require('precss');
+var autoprefixer = require('autoprefixer');
+config.postcss = function() {
+    return [precss, autoprefixer];
+}
+
 // html 页面
 var HtmlwebpackPlugin = require('html-webpack-plugin');
 config.plugins.push(
     new HtmlwebpackPlugin({
         filename: 'index.html',
-        chunks: ['app'],
+        chunks: ['app','lib'],
         template: SRC_PATH + '/pages/app.html'
     })
 );
+
+// 压缩 js、css
+config.plugins.push(
+    new webpack.optimize.UglifyJsPlugin({
+        compress: {
+            warnings: false
+        }
+    })
+);
+
+// 压缩 html
+// html 页面
+var HtmlwebpackPlugin = require('html-webpack-plugin');
+config.plugins.push(
+    new HtmlwebpackPlugin({
+        filename: 'index.html',
+        chunks: ['app', 'lib'],
+        template: SRC_PATH + '/pages/app.html',
+        minify: {
+            collapseWhitespace: true,
+            collapseInlineTagWhitespace: true,
+            removeRedundantAttributes: true,
+            removeEmptyAttributes: true,
+            removeScriptTypeAttributes: true,
+            removeStyleLinkTypeAttributes: true,
+            removeComments: true
+        }
+    })
+);
+
+// 图片路径处理，压缩
+config.module.loaders.push({
+    test: /\.(?:jpg|gif|png|svg)$/,
+    loaders: [
+        'url?limit=8000&name=img/[hash].[ext]',
+        'image-webpack'
+    ]
+});
+
+// 开启热替换相关设置
+if (hot === true) {
+    config.entry.app.unshift('webpack/hot/only-dev-server');
+    // 注意这里 loaders[0] 是处理 .js 文件的 loader
+    config.module.loaders[0].loaders.unshift('react-hot');
+    config.plugins.push(new webpack.HotModuleReplacementPlugin());
+}
 
 module.exports = config;
